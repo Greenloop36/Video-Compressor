@@ -1,9 +1,9 @@
 ## Updater
 
 ## Configuration
-RawBaseURL = "https://raw.githubusercontent.com/Greenloop36/Cryptographer/refs/heads/main"
-Repository = "https://github.com/Greenloop36/Cryptographer"
-DownloadURL = "https://api.github.com/repos/Greenloop36/Cryptographer/zipball"
+RawBaseURL = "https://raw.githubusercontent.com/Greenloop36/Video-Compressor/refs/heads/main"
+Repository = "https://github.com/Greenloop36/Video-Compressor"
+DownloadURL = "https://api.github.com/repos/Greenloop36/Video-Compressor/zipball"
 
 ## Imports
 import requests

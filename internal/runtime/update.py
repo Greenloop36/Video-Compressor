@@ -15,32 +15,21 @@ import colorama
 from colorama import Fore, Back, Style
 
 ## Variables
-UpdateToken: str = "None"
+
 
 ## Functions
-def SetUpdateToken(Token: str):
-    try:
-        Token.encode("latin-1")
-    except UnicodeEncodeError:
-        return False
-    except Exception as e:
-        return False
-
-    global UpdateToken
-    UpdateToken = Token
-
-def ProtectedRequest(URL, DefaultHeaders: dict = None, Token: str = UpdateToken) -> tuple[bool, any]:
-    if DefaultHeaders == None:
-        DefaultHeaders = {"Authorization" : f"token {Token}", "Accept": "application/vnd.github.v3.raw"}
+def ProtectedRequest(URL, DefaultHeaders: dict = None, Token: str = "") -> tuple[bool, any]:
+    # if DefaultHeaders == None:
+    #     DefaultHeaders = {"Authorization" : f"token {Token}", "Accept": "application/vnd.github.v3.raw"}
 
     try:
-        Response = requests.get(URL, headers=DefaultHeaders)
+        Response = requests.get(URL)
     except ConnectionError as e:
         return False, f"Connection failed. Please check your internet connection. ({e})"
     except TimeoutError as e:
         return False, f"Request timed out. ({e})"
     except requests.exceptions.InvalidSchema as e:
-        return False, f"Bad Request. Check the access token.\n{e}"
+        return False, f"Bad Request.{e}"
     except requests.exceptions.RequestException as e:
         return False, f"Unknown error: \"{e}\". Check your internet connection."
     else:
@@ -79,7 +68,7 @@ def Update(TargetDirectory: str, Branch: str = "main"):
 
     ## Download
     PrintStatus(f"downloading archive from branch \"{Branch}\"...")
-    Success, Response = ProtectedRequest(Url, Token=UpdateToken)
+    Success, Response = ProtectedRequest(Url)
 
     if Success:
         PrintOk()
@@ -174,7 +163,7 @@ def Update(TargetDirectory: str, Branch: str = "main"):
 
 
 def GetRawFile(Path: str, Prefix: str = "/") -> tuple[bool, str]:
-    Success, Result = ProtectedRequest(f"{RawBaseURL}{Prefix}{Path}", Token=UpdateToken)
+    Success, Result = ProtectedRequest(f"{RawBaseURL}{Prefix}{Path}")
 
     if not Success:
         return False, Result
@@ -192,24 +181,17 @@ def GetLatestVersionCode() -> str | None:
 if __name__ == "__main__":
     colorama.init(True)
 
-    while True:
-        UpdateToken = input("Please input the update token\n>> ")
-        Code = GetLatestVersionCode()
-
-        if Code == None:
-            print("An improper update token was given. Check it and try again.\n")
-        else:
-            print(f"Latest version: {Code}")
-            break
+    Code = GetLatestVersionCode()
+    print(f"Latest version: {Code}")
 
     while True:
-        Choice = input("You can download a copy of Cryptographer via this utility. Do you wish to do so? (Y/n)\n> ").lower()
+        Choice = input("You can download a copy of Video-Compressor via this utility. Do you wish to do so? (Y/n)\n> ").lower()
 
         if Choice == "y":
             from tkinter import filedialog
 
             print("Please select where to install the copy.")
-            Path = filedialog.askdirectory(title="Select where to install a copy of Cryptographer")
+            Path = filedialog.askdirectory(title="Select where to install a copy of Video-Compressor")
 
             if Path == "":
                 break
